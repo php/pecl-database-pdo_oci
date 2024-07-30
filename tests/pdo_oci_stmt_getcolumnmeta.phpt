@@ -5,7 +5,7 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
@@ -13,10 +13,17 @@ PDOTest::skip();
 
 echo "Preparations before the test\n";
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 try {
     $db = PDOTest::factory();
 
+    $db->exec("begin
+                 execute immediate 'drop table test_pdo_oci_stmt_getcolumnmeta';
+                 exception when others then
+                   if sqlcode <> -942 then
+                     raise;
+                   end if;
+               end;");
     $db->exec("CREATE TABLE test_pdo_oci_stmt_getcolumnmeta(id INT)");
 
     $db->beginTransaction();
@@ -140,17 +147,13 @@ try {
 
     function test_meta(&$db, $offset, $sql_type, $value, $native_type, $pdo_type) {
 
-        $db->exec(<<<SQL
-BEGIN
-   EXECUTE IMMEDIATE 'DROP TABLE test_pdo_oci_stmt_getcolumnmeta';
-EXCEPTION
-   WHEN OTHERS THEN
-      IF SQLCODE != -942 THEN
-         RAISE;
-      END IF;
-END;
-SQL
-);
+        $db->exec("begin
+                     execute immediate 'drop table test_pdo_oci_stmt_getcolumnmeta';
+                     exception when others then
+                       if sqlcode <> -942 then
+                         raise;
+                       end if;
+                   end;");
 
         $sql = sprintf('CREATE TABLE test_pdo_oci_stmt_getcolumnmeta(id INT, label %s)', $sql_type);
         $stmt = $db->prepare($sql);
@@ -222,17 +225,13 @@ SQL
     test_meta($db, 370, 'RAW(256)'      , str_repeat('b', 256) , 'RAW'     , PDO::PARAM_STR);
 
 
-    $db->exec(<<<SQL
-BEGIN
-   EXECUTE IMMEDIATE 'DROP TABLE test_pdo_oci_stmt_getcolumnmeta';
-EXCEPTION
-   WHEN OTHERS THEN
-      IF SQLCODE != -942 THEN
-         RAISE;
-      END IF;
-END;
-SQL
-);
+    $db->exec("begin
+                     execute immediate 'drop table test_pdo_oci_stmt_getcolumnmeta';
+                     exception when others then
+                       if sqlcode <> -942 then
+                         raise;
+                       end if;
+                   end;");
     echo "Test 2.6 testing function return\n";
 
     $stmt = $db->query('SELECT count(*) FROM dual');
@@ -296,9 +295,15 @@ print "done!";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test_pdo_oci_stmt_getcolumnmeta");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_stmt_getcolumnmeta';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 Preparations before the test

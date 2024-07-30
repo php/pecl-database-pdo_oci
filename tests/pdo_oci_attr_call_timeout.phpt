@@ -6,7 +6,7 @@ pdo_oci
 --SKIPIF--
 <?php
 if (getenv('SKIP_SLOW_TESTS')) die('skip slow tests excluded by request');
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 if (strcasecmp(getenv('PDOTEST_USER'), "system") && strcasecmp(getenv('PDOTEST_USER'), "sys")) {
     die("skip needs to be run as a user with access to DBMS_LOCK");
@@ -22,7 +22,7 @@ if (!(isset($matches[0]) && $matches[0] >= 18)) {
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 function mysleep($dbh, $t)
 {

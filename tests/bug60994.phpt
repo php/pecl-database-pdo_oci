@@ -9,17 +9,23 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require __DIR__.'/../../pdo/tests/pdo_test.inc';
-if (!strpos(strtolower(getenv('PDOTEST_DSN')), 'charset=al32utf8')) die('skip expected output valid for AL32UTF8 character set');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $dbh = PDOTest::factory();
 $dbh->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
 $dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
+$dbh->exec("begin
+              execute immediate 'drop table pdo_oci_bug60994';
+              exception when others then
+                if sqlcode <> -942 then
+                  raise;
+                end if;
+            end;");
 $dbh->exec('CREATE TABLE pdo_oci_bug60994 (id NUMBER, data CLOB, data2 NCLOB)');
 
 $id = null;
@@ -110,9 +116,15 @@ if ($string4 != $stream4 || $stream4 != stream_get_contents($row['DATA2'])) {
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "pdo_oci_bug60994");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table pdo_oci_bug60994';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 Test 1:  j

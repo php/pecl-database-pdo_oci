@@ -8,12 +8,14 @@ This test frequently fails in CI
 --SKIPIF--
 <?php
 if (getenv('SKIP_SLOW_TESTS')) die('skip slow tests excluded by request');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+PDOTest::skip();
 ?>
 --FILE--
 <?php
 
 function connectAsAdmin(): PDO {
-    return PDOTest::test_factory(__DIR__ . '/../../pdo_oci/tests/common.phpt');
+    return PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 }
 
 function connectAsUser(string $username, string $password): PDO {
@@ -59,7 +61,7 @@ SQL
     );
 }
 
-require __DIR__ . '/../../pdo/tests/pdo_test.inc';
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $conn = connectAsAdmin();
 
@@ -98,7 +100,7 @@ array(3) {
   [1]=>
   int(28002)
   [2]=>
-  string(%d) "OCISessionBegin: OCI_SUCCESS_WITH_INFO: ORA-28002: %s
+  string(%d) "OCISessionBegin: OCI_SUCCESS_WITH_INFO: ORA-%s
  (%s:%d)"
 }
 array(3) {

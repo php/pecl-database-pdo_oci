@@ -5,14 +5,14 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 if (!strpos(strtolower(getenv('PDOTEST_DSN')), 'charset=we8mswin1252')) die('skip expected output valid for WE8MSWIN1252 character set');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $dbh = PDOTest::factory();
 
@@ -20,12 +20,19 @@ $dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
 // Initialization
 $stmtarray = array(
+    "begin
+       execute immediate 'drop table test_oci_fread_1';
+       exception when others then
+         if sqlcode <> -942 then
+           raise;
+         end if;
+     end;",
     "create table test_oci_fread_1 (id number, data clob)",
     "declare
-    lob1 clob := 'abc' || lpad('j',4020,'j') || 'xyz';
-   begin
-    insert into test_oci_fread_1 (id,data) values (1, lob1);
-  end;"
+     lob1 clob := 'abc' || lpad('j',4020,'j') || 'xyz';
+     begin
+       insert into test_oci_fread_1 (id,data) values (1, lob1);
+     end;"
 );
 
 foreach ($stmtarray as $stmt) {
@@ -47,9 +54,15 @@ fclose($sh);
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, test_oci_fread_1");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_oci_fread_1';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 Test 1

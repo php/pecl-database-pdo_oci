@@ -5,13 +5,13 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $dbh = PDOTest::factory();
 
@@ -37,6 +37,13 @@ var_dump($dbh->getAttribute(PDO::ATTR_AUTOCOMMIT));
 // Use 2nd connection to check that autocommit does commit
 
 echo "Insert data\n";
+$dbh->exec("begin
+              execute immediate 'drop table test_pdo_oci_attr_autocommit_1';
+              exception when others then
+                if sqlcode <> -942 then
+                  raise;
+                end if;
+            end;");
 $dbh->exec("create table test_pdo_oci_attr_autocommit_1 (col1 varchar2(20))");
 $dbh->exec("insert into test_pdo_oci_attr_autocommit_1 (col1) values ('some data')");
 
@@ -54,9 +61,15 @@ echo "Done\n";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test_pdo_oci_attr_autocommit_1");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_attr_autocommit_1';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 PDO::ATTR_AUTOCOMMIT: Default: bool(true)

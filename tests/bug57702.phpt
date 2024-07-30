@@ -5,18 +5,25 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require('ext/pdo/tests/pdo_test.inc');
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 
 // Note the PDO test setup sets PDO::ATTR_STRINGIFY_FETCHES to true
 // (and sets PDO::ATTR_CASE to PDO::CASE_LOWER)
 
+$db->exec("begin
+             execute immediate 'drop table test57702';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 $query = "create table test57702 (id number, data1 blob, data2 blob)";
 $stmt = $db->prepare($query);
 $stmt->execute();
@@ -141,9 +148,15 @@ print "done\n";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test57702");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test57702';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 First Query

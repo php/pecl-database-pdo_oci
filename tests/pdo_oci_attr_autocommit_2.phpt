@@ -5,17 +5,24 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $dbh = PDOTest::factory();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+$dbh->exec("begin
+              execute immediate 'drop table test_pdo_oci_attr_autocommit_2';
+              exception when others then
+                if sqlcode <> -942 then
+                  raise;
+                end if;
+            end;");
 $dbh->exec("create table test_pdo_oci_attr_autocommit_2 (col1 varchar2(25))");
 
 echo "Test 1 Check beginTransaction insertion\n";
@@ -103,14 +110,20 @@ echo "Done\n";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test_pdo_oci_attr_autocommit_2");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_attr_autocommit_2';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECTF--
 Test 1 Check beginTransaction insertion
 Test 2 Cause an exception and test beginTransaction rollback
-Caught expected exception at line 33
+Caught expected exception at line %d
 SQLSTATE[HY000]: General error: 12899 OCIStmtExecute: ORA-12899: %s
 %s
 Test 3 Setting ATTR_AUTOCOMMIT to true will commit and end the transaction

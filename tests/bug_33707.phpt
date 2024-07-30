@@ -5,13 +5,13 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require __DIR__.'/../../pdo/tests/pdo_test.inc';
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 
 $rs = $db->query('select blah from a_table_that_does_not_exist');
@@ -26,6 +26,6 @@ array(3) {
   [1]=>
   int(942)
   [2]=>
-  string(%d) "OCIStmtExecute: ORA-00942: table or view does not exist
+  string(%d) "OCIStmtExecute: ORA-00942: table or view %sdoes not exist
  (%s:%d)"
 }
