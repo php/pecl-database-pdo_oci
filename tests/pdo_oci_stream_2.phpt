@@ -6,16 +6,23 @@ pdo_oci
 --SKIPIF--
 <?php
 if (getenv('SKIP_SLOW_TESTS')) die('skip slow tests excluded by request');
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $db = PDOTest::factory();
 
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_stream_2';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 $query = "create table test_pdo_oci_stream_2 (id number, data1 blob, data2 blob)";
 $stmt = $db->prepare($query);
 $stmt->execute();
@@ -113,9 +120,15 @@ echo "Fetch operation done!\n";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test_pdo_oci_stream_2");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_stream_2';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 Inserting 1000 Records ... Done

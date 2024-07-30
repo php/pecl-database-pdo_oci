@@ -5,13 +5,13 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 function do_query($dbh)
 {
