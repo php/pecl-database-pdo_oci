@@ -1,0 +1,38 @@
+name: Build and Test
+on: [push, pull_request]
+jobs:
+  windows:
+    defaults:
+      run:
+        shell: cmd
+    strategy:
+      matrix:
+          version: ['8.3']
+          arch: [x64]
+          ts: [ts]
+    runs-on: windows-2022
+    steps:
+      - name: Checkout pdo_oci
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        id: setup-php
+        uses: php/setup-php-sdk@v0.9
+        with:
+          version: ${{matrix.version}}
+          arch: ${{matrix.arch}}
+          ts: ${{matrix.ts}}
+      - name: Install OCI
+        run: powershell .github/workflows/install-oci.ps1 -arch ${{matrix.arch}}
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.arch}}
+          toolset: ${{steps.setup-php.outputs.toolset}}
+      - name: phpize
+        run: phpize
+      - name: configure
+        run: configure --with-pdo-oci=instantclient\sdk,shared --with-prefix=${{steps.setup-php.outputs.prefix}}
+      - name: make
+        run: nmake
+      - name: Run smoke test
+        run: deplister ext\php_pdo_oci.dll | grep OCI
