@@ -1,6 +1,32 @@
 name: Build and Test
 on: [push, pull_request]
 jobs:
+  ubuntu:
+    strategy:
+      matrix:
+          version: ['8.3']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Instantclient and SDK
+        run: |
+          curl -o instantclient-sdk.zip https://download.oracle.com/otn_software/linux/instantclient/instantclient-sdk-linuxx64.zip
+          unzip instantclient-sdk-linuxx64.zip
+          mv instantclient_* instantclient
+      - name: Show directory structure
+        run: tree instantclient
+      - name: Checkout pdo_oci
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{matrix.version}}
+      - name: Build pdo_oci
+        run: |
+          phpize
+          ./configure --with-pdo-oci=instantclient,/path/to/instant/client/lib
+          make
+#      - name: Test pdo_oci
+#        run: make test TESTS=tests
   windows:
     defaults:
       run:
