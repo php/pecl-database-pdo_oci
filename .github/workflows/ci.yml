@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Setup Instantclient and SDK
         run: |
-          curl -o instantclient-sdk.zip https://download.oracle.com/otn_software/linux/instantclient/instantclient-sdk-linuxx64.zip
+          curl -O https://download.oracle.com/otn_software/linux/instantclient/instantclient-sdk-linuxx64.zip
           unzip instantclient-sdk-linuxx64.zip
           mv instantclient_* instantclient
       - name: Show directory structure
