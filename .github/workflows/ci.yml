@@ -11,12 +11,12 @@ jobs:
         run: |
           curl -O https://download.oracle.com/otn_software/linux/instantclient/instantclient-sdk-linuxx64.zip
           curl -O https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip
-          unzip instantclient-sdk-linuxx64.zip 'instantclient*/'
-          unzip instantclient-basiclite-linuxx64.zip 'instantclient*/'
+          unzip instantclient-sdk-linuxx64.zip 'instantclient*/*'
+          unzip instantclient-basiclite-linuxx64.zip 'instantclient*/*'
           mv instantclient_* instantclient
       - name: Show directory structure
         run: |
-          ls
+          pwd
           tree instantclient
       - name: Checkout pdo_oci
         uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
       - name: Build pdo_oci
         run: |
           phpize
-          ./configure --with-pdo-oci=instantclient,/path/to/instant/client/lib
+          ./configure --with-pdo-oci=instantclient,instantclient
           make
 #      - name: Test pdo_oci
 #        run: make test TESTS=tests
