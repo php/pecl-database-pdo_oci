@@ -16,7 +16,7 @@ jobs:
           mv instantclient_* instantclient
       - name: Show directory structure
         run: |
-          echo ${{GITHUB_WORKSPACE}}
+          echo ${{github.workspace}}
           pwd
           tree instantclient
       - name: Checkout pdo_oci
@@ -28,7 +28,7 @@ jobs:
       - name: Build pdo_oci
         run: |
           phpize
-          ./configure --with-pdo-oci=instantclient,${{GITHUB_WORKSPACE}}/instantclient
+          ./configure --with-pdo-oci=instantclient,${{github.workspace}}/instantclient
           make
 #      - name: Test pdo_oci
 #        run: make test TESTS=tests
