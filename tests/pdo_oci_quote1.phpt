@@ -5,15 +5,22 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require __DIR__ . '/../../pdo/tests/pdo_test.inc';
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::factory();
 
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_quote1';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 $db->query("create table test_pdo_oci_quote1 (t varchar2(100))");
 $stmt = $db->prepare('select * from test_pdo_oci_quote1');
 
@@ -39,9 +46,15 @@ echo "Done\n";
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test_pdo_oci_quote1");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test_pdo_oci_quote1';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECT--
 Unquoted : string(0) ""

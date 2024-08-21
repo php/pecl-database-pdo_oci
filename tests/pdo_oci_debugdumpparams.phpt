@@ -5,12 +5,12 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require(__DIR__.'/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
-require(__DIR__ . '/../../pdo/tests/pdo_test.inc');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $db = PDOTest::factory();
 $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -25,8 +25,8 @@ $stmt = $db->query("
 ");
 var_dump($stmt->debugDumpParams());
 ?>
---EXPECT--
-SQL: [844] 
+--EXPECTF--
+SQL: [844]%s
     SELECT '
         Dumps the information contained by a prepared statement directly on the output. It will provide the SQL query in use, the number of parameters used (Params), the list of parameters, with their name, type (paramtype) as an integer, their key name or position, and the position in the query (if this is supported by the PDO driver, otherwise, it will be -1).
         This is a debug function, which dump directly the data on the normal output.

@@ -5,16 +5,24 @@ pdo
 pdo_oci
 --SKIPIF--
 <?php
-require __DIR__.'/../../pdo/tests/pdo_test.inc';
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 ?>
 --FILE--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+
+$db->exec("begin
+             execute immediate 'drop table test46274_2';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 
 $db->beginTransaction();
 
@@ -56,9 +64,15 @@ fclose($row[0]);
 ?>
 --CLEAN--
 <?php
-require 'ext/pdo/tests/pdo_test.inc';
-$db = PDOTest::test_factory('ext/pdo_oci/tests/common.phpt');
-PDOTest::dropTableIfExists($db, "test46274_2");
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
+$db->exec("begin
+             execute immediate 'drop table test46274_2';
+             exception when others then
+               if sqlcode <> -942 then
+                 raise;
+               end if;
+           end;");
 ?>
 --EXPECTF--
 array(2) {
