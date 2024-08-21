@@ -15,6 +15,8 @@ bundle, or build from the PHP source code by running:
 
 To complete installation, add "extension=pdo_oci.so" to your php.ini file.
 
+PHP is available from https://www.php.net/releases/
+
 The PDO_OCI extension can be linked with Oracle client libraries from Oracle
 Database 11.2 or later.  These libraries are found in your database
 installation, or in the free Oracle Instant Client from
