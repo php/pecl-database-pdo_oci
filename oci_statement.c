@@ -222,6 +222,15 @@ static sb4 oci_bind_input_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, dv
 		*bufpp = 0;
 		*alenp = -1;
 	} else if (!P->thing) {
+		/* Handle boolean as "1"/ "0" */
+		if(PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_BOOL) {
+			if(zval_is_true(parameter)) {
+				ZVAL_STRING(parameter, "1");
+			} else {
+				ZVAL_STRING(parameter, "0");
+			}
+		}
+
 		/* regular string bind */
 		if (!try_convert_to_string(parameter)) {
 			return OCI_ERROR;
