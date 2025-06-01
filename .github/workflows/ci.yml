@@ -20,6 +20,12 @@ jobs:
           - version: 8.5
             branch: master
     services:
+      oracle-11:
+        image: wnameless/oracle-xe-11g-r2
+        ports:
+          - 1511:1521
+        env:
+          ORACLE_ALLOW_REMOTE: true
       oracle-18:
         image: gvenzl/oracle-xe:18-slim-faststart
         ports:
@@ -78,8 +84,17 @@ jobs:
           echo 'extension=pdo_oci.so' | sudo tee /etc/php/${{ matrix.version }}/mods-available/pdo_oci.ini
           sudo phpenmod -v ${{ matrix.version }} pdo_oci
           php --ri pdo_oci
+      - name: Run tests /w Oracle 11
+        run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
+        env:
+          PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
+          PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
+          PDO_OCI_TEST_USER: system
+          PDO_OCI_TEST_PASS: oracle
+          PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1511/XE;charset=AL32UTF8
       - name: Run tests /w Oracle 18
-        run: php php-src/run-tests.php --set-timeout 600 tests
+        if: success() || failure()
+        run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
         env:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
@@ -88,7 +103,7 @@ jobs:
           PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1518/FREEPDB1;charset=AL32UTF8
       - name: Run tests /w Oracle 23
         if: success() || failure()
-        run: php php-src/run-tests.php --set-timeout 600 tests
+        run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
         env:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
