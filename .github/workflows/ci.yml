@@ -1,6 +1,6 @@
 name: CI
 
-on: 
+on:
   push:
   pull_request:
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
           sudo ln -sf /usr/lib/x86_64-linux-gnu/libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1 >/dev/null 2>&1 || true
           # fix debug build warning: zend_signal: handler was replaced for signal (2) after startup
           echo DISABLE_INTERRUPT=on > /opt/oracle/instantclient/network/admin/sqlnet.ora
-      - name: Checkout pdo_oci
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Checkout php-src
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{matrix.version}}
-      - name: Build pdo_oci
+      - name: Build
         run: |
           phpize
           ./configure --with-php-config=$(command -v php-config) --with-pdo-oci=instantclient,/opt/oracle/instantclient
@@ -67,7 +67,7 @@ jobs:
           echo 'extension=pdo_oci.so' | sudo tee /etc/php/${{ matrix.version }}/mods-available/pdo_oci.ini
           sudo phpenmod -v ${{ matrix.version }} pdo_oci
           php --ri pdo_oci
-      - name: Run Tests      
+      - name: Run tests
         run: php php-src/run-tests.php --set-timeout 600 tests
         env:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Get the extension matrix
+      - name: Create matrix
         id: extension-matrix
         uses: php/php-windows-builder/extension-matrix@v1
         with:
@@ -98,21 +98,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build the extension
+      - name: Build
         uses: php/php-windows-builder/extension@v1
         with:
           php-version: ${{ matrix.php-version }}
           arch: ${{ matrix.arch }}
           ts: ${{ matrix.ts }}
           libs: instantclient
-          test-workers: 4  
 
   windows-release:
     runs-on: ubuntu-latest
     needs: windows
     if: ${{ github.event_name == 'release' }}
     steps:
-      - name: Upload artifact to the release
+      - name: Upload release artifact
         uses: php/php-windows-builder/release@v1
         with:
           release: ${{ github.event.release.tag_name }}
