@@ -3,8 +3,6 @@ PDO OCI Bug #44301 (Segfault when an exception is thrown on persistent connectio
 --EXTENSIONS--
 pdo
 pdo_oci
---XFAIL--
-This test is currently failing in CI.
 --SKIPIF--
 <?php
 require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
@@ -27,4 +25,4 @@ $db = null;
 ?>
 --EXPECTF--
 SQLSTATE[HY000]: General error: 942 OCIStmtExecute: ORA-00942: table or view %sdoes not exist
- (%s%epdo_oci%eoci_statement.c:%d)
+ (%soci_statement.c:%d)
