@@ -31,7 +31,18 @@ jobs:
         ports:
           - 1518:1521
         env:
-          ORACLE_PASSWORD: my_pass
+          ORACLE_PASSWORD: my_pass_18
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+      oracle-21:
+        image: gvenzl/oracle-xe:21-slim-faststart
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_PASSWORD: my_pass_21
         options: >-
           --health-cmd healthcheck.sh
           --health-interval 10s
@@ -42,7 +53,7 @@ jobs:
         ports:
           - 1523:1521
         env:
-          ORACLE_PASSWORD: my_pass
+          ORACLE_PASSWORD: my_pass_23
         options: >-
           --health-cmd healthcheck.sh
           --health-interval 10s
@@ -103,8 +114,17 @@ jobs:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
           PDO_OCI_TEST_USER: system
-          PDO_OCI_TEST_PASS: my_pass
+          PDO_OCI_TEST_PASS: my_pass_18
           PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1518/XE;charset=AL32UTF8
+      - name: Run tests /w Oracle 21
+        if: success() || failure()
+        run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
+        env:
+          PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
+          PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
+          PDO_OCI_TEST_USER: system
+          PDO_OCI_TEST_PASS: my_pass_21
+          PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1521/XE;charset=AL32UTF8
       - name: Run tests /w Oracle 23
         if: success() || failure()
         run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
@@ -112,7 +132,7 @@ jobs:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
           PDO_OCI_TEST_USER: system
-          PDO_OCI_TEST_PASS: my_pass
+          PDO_OCI_TEST_PASS: my_pass_23
           PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1523/FREEPDB1;charset=AL32UTF8
 
   windows-matrix:
