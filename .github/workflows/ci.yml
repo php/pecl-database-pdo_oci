@@ -95,12 +95,11 @@ jobs:
           echo 'extension=pdo_oci.so' | sudo tee /etc/php/${{ matrix.version }}/mods-available/pdo_oci.ini
           sudo phpenmod -v ${{ matrix.version }} pdo_oci
           php --ri pdo_oci
-      - name: Run tests /w Oracle 11
-        run: |
-          # https://github.com/php/php-src/pull/18734
-          # https://github.com/php/pecl-database-pdo_oci/pull/16#discussion_r2119810891
-          find php-src/ext/pdo/tests -name '*.phpt' -type f -delete
-          php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
+      - name: Run tests /w Oracle 11 (for PHP 8.3 only)
+        # https://github.com/php/php-src/pull/18734
+        # https://github.com/php/pecl-database-pdo_oci/pull/16#discussion_r2119810891
+        if: matrix.version == '8.3'
+        run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
         env:
           PDO_TEST_DIR: ${{ github.workspace }}/php-src/ext/pdo/tests
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
