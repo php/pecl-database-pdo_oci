@@ -104,7 +104,7 @@ jobs:
           PDO_OCI_TEST_DIR: ${{ github.workspace }}/tests
           PDO_OCI_TEST_USER: system
           PDO_OCI_TEST_PASS: my_pass
-          PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1518/FREEPDB1;charset=AL32UTF8
+          PDO_OCI_TEST_DSN: oci:dbname=0.0.0.0:1518/XE;charset=AL32UTF8
       - name: Run tests /w Oracle 23
         if: success() || failure()
         run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
