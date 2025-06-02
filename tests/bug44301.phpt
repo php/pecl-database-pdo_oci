@@ -24,5 +24,5 @@ try {
 $db = null;
 ?>
 --EXPECTF--
-SQLSTATE[HY000]: General error: 942 OCIStmtExecute: ORA-00942: table or view %sdoes not exist
- (%s%epdo_oci%eoci_statement.c:%d)
+SQLSTATE[HY000]: General error: 942 OCIStmtExecute: ORA-00942: table or view %Sdoes not exist
+ (%soci_statement.c:%d)
