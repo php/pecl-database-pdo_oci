@@ -7,6 +7,8 @@ pdo_oci
 <?php
 require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
+$db = PDOTest::factory();
+if (version_compare($db->getAttribute(PDO::ATTR_SERVER_VERSION), 12) < 0) die('xfail CI is failing with Oracle XE 11g');
 ?>
 --FILE--
 <?php

@@ -2,6 +2,8 @@
 
 Use the PDO_OCI extension to access Oracle Database.
 
+This repository is for PHP 8.3+ as it [was decided to unbundle](https://wiki.php.net/rfc/unbundle_imap_pspell_oci8) PDO OCI / OCI8 extension from the PHP source code.
+
 Documentation is at https://www.php.net/pdo_oci
 
 Use `pecl install pdo_oci` to install for PHP 8.3.
