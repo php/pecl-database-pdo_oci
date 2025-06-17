@@ -742,6 +742,7 @@ static int pdo_oci_handle_factory(pdo_dbh_t *dbh, zval *driver_options) /* {{{ *
 	H->prefetch = PDO_OCI_PREFETCH_DEFAULT;
 
 	/* allocate an environment */
+#ifdef HAVE_OCIENVNLSCREATE
 	if (vars[0].optval) {
 		H->charset = OCINlsCharSetNameToId(pdo_oci_Env, (const oratext *)vars[0].optval);
 		if (!H->charset) {
@@ -754,7 +755,7 @@ static int pdo_oci_handle_factory(pdo_dbh_t *dbh, zval *driver_options) /* {{{ *
 			}
 		}
 	}
-
+#endif
 	if (H->env == NULL) {
 		/* use the global environment */
 		H->env = pdo_oci_Env;
