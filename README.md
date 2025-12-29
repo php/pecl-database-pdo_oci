@@ -10,12 +10,15 @@ Use `pecl install pdo_oci` to install for PHP 8.3.
 
 For older PHP versions, use php_pdo_oci.dll from the Windows PHP release
 bundle, or build from the PHP source code by running:
+```
+phpize
 
-  phpize
-  ./configure -with-pdo_oci=shared,instantclient,/path/to/instant/client/lib
-  make install
+./configure --with-pdo_oci=shared,instantclient,/path/to/instant/client/lib
+make install
 
-To complete installation, add "extension=pdo_oci.so" to your php.ini file.
+```
+
+To complete installation, add "extension=pdo_oci.so" or "extension=php_pdo_oci.dll" to your php.ini file.
 
 PHP is available from https://www.php.net/releases/
 
