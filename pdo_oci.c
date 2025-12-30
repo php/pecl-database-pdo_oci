@@ -81,11 +81,21 @@ static MUTEX_T pdo_oci_env_mutex;
 /* {{{ PHP_MINIT_FUNCTION */
 PHP_MINIT_FUNCTION(pdo_oci)
 {
+#if PHP_VERSION_ID < 80500
 	REGISTER_PDO_CLASS_CONST_LONG("OCI_ATTR_ACTION", (zend_long)PDO_OCI_ATTR_ACTION);
 	REGISTER_PDO_CLASS_CONST_LONG("OCI_ATTR_CLIENT_INFO", (zend_long)PDO_OCI_ATTR_CLIENT_INFO);
 	REGISTER_PDO_CLASS_CONST_LONG("OCI_ATTR_CLIENT_IDENTIFIER", (zend_long)PDO_OCI_ATTR_CLIENT_IDENTIFIER);
 	REGISTER_PDO_CLASS_CONST_LONG("OCI_ATTR_MODULE", (zend_long)PDO_OCI_ATTR_MODULE);
 	REGISTER_PDO_CLASS_CONST_LONG("OCI_ATTR_CALL_TIMEOUT", (zend_long)PDO_OCI_ATTR_CALL_TIMEOUT);
+#else
+	zend_class_entry *pdo_ce = php_pdo_get_dbh_ce();
+
+	zend_declare_class_constant_long(pdo_ce, "OCI_ATTR_ACTION", sizeof("OCI_ATTR_ACTION") - 1, (zend_long)PDO_OCI_ATTR_ACTION);
+	zend_declare_class_constant_long(pdo_ce, "OCI_ATTR_CLIENT_INFO", sizeof("OCI_ATTR_CLIENT_INFO") - 1, (zend_long)PDO_OCI_ATTR_CLIENT_INFO);
+	zend_declare_class_constant_long(pdo_ce, "OCI_ATTR_CLIENT_IDENTIFIER", sizeof("OCI_ATTR_CLIENT_IDENTIFIER") - 1, (zend_long)PDO_OCI_ATTR_CLIENT_IDENTIFIER);
+	zend_declare_class_constant_long(pdo_ce, "OCI_ATTR_MODULE", sizeof("OCI_ATTR_MODULE") - 1, (zend_long)PDO_OCI_ATTR_MODULE);
+	zend_declare_class_constant_long(pdo_ce, "OCI_ATTR_CALL_TIMEOUT", sizeof("OCI_ATTR_CALL_TIMEOUT") - 1, (zend_long)PDO_OCI_ATTR_CALL_TIMEOUT);
+#endif
 
 	if (FAILURE == php_pdo_register_driver(&pdo_oci_driver)) {
 		return FAILURE;
