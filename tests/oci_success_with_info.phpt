@@ -14,6 +14,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
+require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 function connectAsAdmin(): PDO {
     return PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 }

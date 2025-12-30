@@ -604,6 +604,7 @@ static int oci_stmt_describe(pdo_stmt_t *stmt, int colno) /* {{{ */
 				oci_define_callback));
 	}
 
+	OCIDescriptorFree(param, OCI_DTYPE_PARAM);
 	return 1;
 } /* }}} */
 
@@ -693,13 +694,34 @@ static int oci_blob_flush(php_stream *stream)
 static int oci_blob_seek(php_stream *stream, zend_off_t offset, int whence, zend_off_t *newoffset)
 {
 	struct oci_lob_self *self = (struct oci_lob_self*)stream->abstract;
+	oraub8 loblen = 0;
 
-	if (offset >= PDO_OCI_LOBMAXSIZE) {
+	if (OCILobGetLength2(self->E->svc, self->E->err, self->lob, &loblen) != OCI_SUCCESS) {
 		return -1;
-	} else {
-		self->offset = (ub4) offset + 1;  /* Oracle LOBS are 1-based, but PHP is 0-based */
-		return 0;
 	}
+
+	zend_off_t new_offset = 0;
+	switch (whence) {
+		case SEEK_SET:
+			new_offset = offset;
+			break;
+		case SEEK_CUR:
+			new_offset = (zend_off_t)self->offset - 1 + offset;
+			break;
+		case SEEK_END:
+			new_offset = (zend_off_t)loblen + offset;
+			break;
+		default:
+			return -1;
+	}
+
+	if (new_offset < 0 || new_offset > (zend_off_t)loblen) {
+		return -1;
+	}
+
+	self->offset = (ub4)(new_offset + 1);  /* Oracle LOBS are 1-based, PHP 0-based */
+	*newoffset = new_offset;
+	return 0;
 }
 
 static const php_stream_ops oci_blob_stream_ops = {
