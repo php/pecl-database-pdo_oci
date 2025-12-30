@@ -96,6 +96,11 @@ jobs:
           echo 'extension=pdo_oci.so' | sudo tee /etc/php/${{ matrix.version }}/mods-available/pdo_oci.ini
           sudo phpenmod -v ${{ matrix.version }} pdo_oci
           php --ri pdo_oci
+      - name: Remove unsupported php-src tests
+        run: |
+          # Test gh20553.phpt is not compatible with Oracle.
+          # SELECT <literals> without a FROM clause is not supported in Oracle (ORA-00923).
+          rm -rf php-src/ext/pdo/tests/gh20553.phpt
       - name: Run tests /w Oracle ${{ matrix.oracle }}
         run: php php-src/run-tests.php --show-diff --show-slow 1000 --set-timeout 120 tests
         env:
