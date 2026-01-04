@@ -6,7 +6,10 @@ This repository is for PHP 8.3+ as it [was decided to unbundle](https://wiki.php
 
 Documentation is at https://www.php.net/pdo_oci
 
-Use `pecl install pdo_oci` to install for PHP 8.3.
+Installation
+------------
+
+Use `pecl install pdo_oci` to install for PHP 8.3 and newer versions.
 
 For older PHP versions, use php_pdo_oci.dll from the Windows PHP release
 bundle, or build from the PHP source code by running:
@@ -18,6 +21,9 @@ make install
 ```
 
 To complete installation, add "extension=pdo_oci.so" or "extension=php_pdo_oci.dll" (Windows) to your php.ini file.
+
+Links
+-----
 
 PHP is available from https://www.php.net/releases/
 
