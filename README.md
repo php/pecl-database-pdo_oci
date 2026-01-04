@@ -22,17 +22,17 @@ make install
 
 To complete installation, add "extension=pdo_oci.so" or "extension=php_pdo_oci.dll" (Windows) to your php.ini file.
 
-Links
------
-
-PHP is available from https://www.php.net/releases/
+Additional Requirements
+------------------------
 
 The PDO_OCI extension can be linked with Oracle Client libraries from Oracle Database 11.2 or later. These libraries are found in your database
 installation, or in the free Oracle Instant Client packages from
 https://www.oracle.com/database/technologies/instant-client.html.
 Install the 'Basic' or 'Basic Light' Instant Client package for running applications with this extension. If building from source, then also install the Instant Client SDK package.
 
-Oracle's standard cross-version connectivity applies.  For example, PHP PDO_OCI
-linked with Instant Client 19c can connect to Oracle Database 11.2 onward.  See
+Oracle's standard cross-version connectivity applies. For example, PHP PDO_OCI
+linked with Instant Client 19c can connect to Oracle Database 11.2 onward. See
 Oracle's note "Oracle Client / Server Interoperability Support" (ID 207303.1)
 for details.
+
+PHP is available from https://www.php.net/releases/
