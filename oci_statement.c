@@ -227,7 +227,7 @@ static sb4 oci_bind_input_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, dv
 	} else if (!P->thing) {
 		if(PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_BOOL) {
 			/* Handle boolean as "1"/ "0" */
-			if(zval_is_true(parameter)) {
+			if(zend_is_true(parameter)) {
 				zval_ptr_dtor(parameter);
 				ZVAL_CHAR(parameter, '1');
 			} else {
