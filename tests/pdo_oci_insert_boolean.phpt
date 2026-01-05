@@ -1,5 +1,5 @@
 --TEST--
-PDO_OCI: Insert BOOLEAN values into BOOLEAN column (Oracle 21c+)
+PDO_OCI: Insert BOOLEAN values into BOOLEAN column (Oracle 23ai+)
 --EXTENSIONS--
 pdo
 pdo_oci
@@ -11,8 +11,8 @@ $db = PDOTest::factory();
 $version = $db->getAttribute(PDO::ATTR_SERVER_VERSION);
 preg_match('/^(\d+)\./', $version, $matches);
 $majorVersion = (int)$matches[1];
-if ($majorVersion < 21) {
-    die('skip BOOLEAN type supported from Oracle Database 21c');
+if ($majorVersion < 23) {
+    die('skip BOOLEAN type supported from Oracle Database 23ai');
 }
 
 PDOTest::skip();
@@ -57,16 +57,16 @@ $db->exec("DROP TABLE test_bool");
 array(2) {
   [0]=>
   array(2) {
-    ["ID"]=>
+    ["id"]=>
     string(1) "1"
-    ["BOOL_VAL"]=>
+    ["bool_val"]=>
     string(1) "1"
   }
   [1]=>
   array(2) {
-    ["ID"]=>
+    ["id"]=>
     string(1) "2"
-    ["BOOL_VAL"]=>
+    ["bool_val"]=>
     string(1) "0"
   }
 }
