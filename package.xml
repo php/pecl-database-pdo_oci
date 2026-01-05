@@ -8,11 +8,11 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <summary>Extension for Oracle Database</summary>
 
  <description>
-The PDO_OCI extension lets you access Oracle Database.
+Use the PDO_OCI extension to access Oracle Database via PHP Data Objects (PDO) APIs.
 
 Documentation is at https://www.php.net/pdo_oci
 
-Use &apos;pecl install pdo_oci&apos; to install for PHP 8.3.
+Use &apos;pecl install pdo_oci&apos; to install for PHP 8.3+.
 
 For older PHP versions, use php_pdo_oci.dll from the Windows PHP release bundle, or build from the PHP source code by running:
 
@@ -22,11 +22,12 @@ For older PHP versions, use php_pdo_oci.dll from the Windows PHP release bundle,
 
     make install
 
-To complete installation, add "extension=pdo_oci.so" to your php.ini file.
+To complete installation, add "extension=pdo_oci.so"  or "extension=php_pdo_oci.dll" (Windows) to your php.ini file.
 
 PHP is available from https://www.php.net/releases/  
 
-The PDO_OCI extension can be linked with Oracle client libraries from Oracle Database 11.2 or later.  These libraries are found in your database installation, or in the free Oracle Instant Client from https://www.oracle.com/database/technologies/instant-client.html Install the &quot;Basic&quot; or &quot;Basic Light&quot; Instant Client package. If building from source, then also install the SDK package.
+The PDO_OCI extension can be linked with Oracle Client libraries from Oracle Database 11.2 or later.  These libraries are found in your database installation, or in the free Oracle Instant Client packages from https://www.oracle.com/database/technologies/instant-client.html.
+Install the &quot;Basic&quot; or &quot;Basic Light&quot; Instant Client package. If building from source, then install the SDK package as well.
 
 Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO_OCI linked with Oracle Client 19c can connect to Oracle Database 11.2 onward.  See Oracle&apos;s note &quot;Oracle Client / Server Interoperability Support&quot; (ID 207303.1) for details.
  </description>
@@ -34,6 +35,13 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
   <name>Christopher Jones</name>
   <user>sixd</user>
   <email>sixd@php.net</email>
+  <active>yes</active>
+ </lead>
+
+ <lead>
+  <name>Sharad Chandran R</name>
+  <user>sharadchan87</user>
+  <email>sharad.raju@oracle.com</email>
   <active>yes</active>
  </lead>
 
@@ -50,7 +58,7 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
   </stability>
   <license uri="http://www.php.net/license">PHP</license>
   <notes>
-    This version is for PHP 8.3 only.
+    This version is for PHP 8.3 and 8.4 only.
 
     Requires Oracle Client libraries from 11.2 or later.
   </notes>
