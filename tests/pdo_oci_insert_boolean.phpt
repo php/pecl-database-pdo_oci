@@ -23,15 +23,8 @@ PDOTest::skip();
 require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::factory();
 
-// Drop table if exists (ignore error if it doesn't exist)
-try {
-    $db->exec("DROP TABLE test_bool");
-} catch (PDOException $e) {
-    // Ignore
-}
-
 // Create table
-$db->exec("CREATE TABLE test_bool (id NUMBER, bool_val BOOLEAN)");
+$db->exec("CREATE TABLE IF EXISTS test_bool (id NUMBER, bool_val BOOLEAN)");
 
 // Insert true
 $stmt = $db->prepare("INSERT INTO test_bool (id, bool_val) VALUES (1, :val)");
