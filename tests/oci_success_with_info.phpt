@@ -9,12 +9,13 @@ This test frequently fails in CI
 <?php
 if (getenv('SKIP_SLOW_TESTS')) die('skip slow tests excluded by request');
 require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+$user = getenv('PDOTEST_USER');
+if (strcasecmp($user, "system") && strcasecmp($user, "sys")) die("skip needs to be run as a DBA user");
 PDOTest::skip();
 ?>
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 function connectAsAdmin(): PDO {
     return PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 }
@@ -61,8 +62,6 @@ END;
 SQL
     );
 }
-
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $conn = connectAsAdmin();
 
