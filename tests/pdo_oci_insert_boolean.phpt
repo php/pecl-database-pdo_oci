@@ -24,7 +24,7 @@ require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::factory();
 
 // Create table
-$db->exec("CREATE TABLE IF EXISTS test_bool (id NUMBER, bool_val BOOLEAN)");
+$db->exec("CREATE TABLE IF NOT EXISTS test_bool (id NUMBER, bool_val BOOLEAN)");
 
 // Insert true
 $stmt = $db->prepare("INSERT INTO test_bool (id, bool_val) VALUES (1, :val)");
