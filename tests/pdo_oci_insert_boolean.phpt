@@ -40,7 +40,7 @@ $stmt->execute();
 
 // Fetch and dump
 $stmt = $db->query("SELECT id, bool_val FROM test_bool ORDER BY id");
-var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
+var_dump($stmt->fetchAll(PDO::FETCH_NUM));
 
 // Cleanup
 $db->exec("DROP TABLE test_bool");
