@@ -28,3 +28,4 @@ echo "Done\n";
 ?>
 --EXPECTF--
 Connection failed: SQLSTATE[HY000]: OCINlsCharSetNameToId: unknown character set name (%s)
+

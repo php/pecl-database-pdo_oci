@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $query = 'select action from v$session where sid = sys_context(\'USERENV\', \'SID\')';
 
@@ -55,3 +55,4 @@ ACTION RESET: string(15) "something else!"
 bool(true)
 ACTION NULLED: NULL
 Done
+

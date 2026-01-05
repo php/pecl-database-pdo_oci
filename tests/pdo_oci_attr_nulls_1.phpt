@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 function do_query($dbh)
 {
@@ -61,3 +61,4 @@ PDO::ATTR_ORACLE_NULLS: PDO::NULL_TO_STRING: int(2)
 string(0) ""
 string(0) ""
 Done
+

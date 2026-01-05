@@ -22,7 +22,7 @@ if (!(isset($matches[0]) && $matches[0] >= 18)) {
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 function mysleep($dbh, $t)
 {
@@ -66,3 +66,4 @@ int(4000)
 Execute error was OCIStmtExecute: ORA-%r(03136|03156)%r: %s
  (%s:%d)
 ===DONE===
+

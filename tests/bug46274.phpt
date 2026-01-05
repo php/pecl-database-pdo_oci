@@ -9,7 +9,7 @@ require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 PDOTest::skip();
 --FILE--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -81,3 +81,4 @@ array(2) {
   [0]=>
   string(0) ""
 }
+

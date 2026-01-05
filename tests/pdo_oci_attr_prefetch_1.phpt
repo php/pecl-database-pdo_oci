@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $dbh = PDOTest::factory();
 
@@ -78,3 +78,4 @@ Test set PHP_INT_MAX: (Uses default)
 100
 X
 Done
+

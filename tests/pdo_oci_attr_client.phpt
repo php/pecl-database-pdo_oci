@@ -10,7 +10,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $dbh = PDOTest::factory();
 
@@ -42,3 +42,4 @@ echo "Done\n";
 ATTR_CLIENT_VERSION: string(%d) "%d.%s"
 Version OK, so far as can be portably checked
 Done
+

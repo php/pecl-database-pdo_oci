@@ -14,7 +14,7 @@ PDOTest::skip();
 ?>
 --FILE--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $dbh = PDOTest::factory();
 $dbh->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
 $dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
@@ -150,3 +150,4 @@ size of string4 is 24567 bytes, 8193 chars.
 size of stream4 is 24567 bytes, 8193 chars.
 beg  of stream4 is abcののののののの
 end  of stream4 is のののののののxyz
+

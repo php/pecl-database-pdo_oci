@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 function do_query1($dbh)
 {
@@ -81,3 +81,4 @@ array(1) {
   string(1) "X"
 }
 Done
+

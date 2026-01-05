@@ -10,7 +10,7 @@ PDOTest::skip();
 ?>
 --FILE--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::factory();
 
 ob_start();
@@ -27,3 +27,4 @@ print "done!";
 ?>
 --EXPECT--
 done!
+

@@ -12,7 +12,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $dbh = PDOTest::factory();
 
 $dbh->exec("begin
@@ -85,3 +85,4 @@ array(10) {
   NULL
 }
 Done
+

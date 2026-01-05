@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?PHP
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 
 $clobquery1 = "select TO_CLOB('Hello World') CLOB_DATA from dual";
@@ -84,3 +84,4 @@ else
 ?>
 --EXPECT--
 Success! All the temporary LOB in previously closed statements are properly cleaned.
+

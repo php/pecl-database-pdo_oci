@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $expected = [
     'OCI_ATTR_CLIENT_INFO'        => true,
@@ -66,3 +66,4 @@ print "done!";
 ?>
 --EXPECT--
 done!
+

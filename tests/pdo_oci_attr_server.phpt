@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $dbh = PDOTest::factory();
 
@@ -40,3 +40,4 @@ Test 2
 ATTR_SERVER_INFO
 Found 'Oracle' at position 0 as expected
 Done
+

@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 
 $query = 'select client_info from v$session where sid = sys_context(\'USERENV\', \'SID\')';
 
@@ -55,3 +55,4 @@ CLIENT_INFO RESET: string(15) "something else!"
 bool(true)
 CLIENT_INFO NULLED: NULL
 Done
+

@@ -23,3 +23,4 @@ if (false !== getenv('PDO_OCI_TEST_DSN')) {
 }
 
 return $config;
+

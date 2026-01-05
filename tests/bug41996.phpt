@@ -10,7 +10,7 @@ PDOTest::skip();
 ?>
 --FILE--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 
 $stmt = $db->prepare('SELECT rowid FROM dual');
@@ -20,3 +20,4 @@ var_dump(strlen($row[0]) > 0);
 ?>
 --EXPECT--
 bool(true)
+

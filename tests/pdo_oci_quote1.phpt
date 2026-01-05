@@ -11,7 +11,7 @@ PDOTest::skip();
 --FILE--
 <?php
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::factory();
 
 $db->exec("begin
@@ -169,3 +169,4 @@ array(1) {
   }
 }
 Done
+

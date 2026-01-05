@@ -15,7 +15,7 @@ PDOTest::skip();
 ?>
 --FILE--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 function connectAsAdmin(): PDO {
     return PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 }
@@ -121,3 +121,4 @@ array(3) {
   string(%d) "OCIStmtExecute: OCI_SUCCESS_WITH_INFO: ORA-24344: %s
  (%s:%d)"
 }
+
