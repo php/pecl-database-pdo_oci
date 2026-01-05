@@ -225,9 +225,20 @@ static sb4 oci_bind_input_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, dv
 		*bufpp = 0;
 		*alenp = -1;
 	} else if (!P->thing) {
-		/* regular string bind */
-		if (!try_convert_to_string(parameter)) {
-			return OCI_ERROR;
+		if(PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_BOOL) {
+			/* Handle boolean as "1"/ "0" */
+			if(zval_is_true(parameter)) {
+				zval_ptr_dtor(parameter);
+				ZVAL_CHAR(parameter, '1');
+			} else {
+				zval_ptr_dtor(parameter);
+				ZVAL_CHAR(parameter, '0');
+			}
+		} else {
+			/* regular string bind */
+			if (!try_convert_to_string(parameter)) {
+				return OCI_ERROR;
+			}
 		}
 		*bufpp = Z_STRVAL_P(parameter);
 		*alenp = (ub4) Z_STRLEN_P(parameter);
