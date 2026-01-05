@@ -4,7 +4,7 @@
     "description": "Use the PDO_OCI extension to access Oracle Database via PHP Data Objects (PDO) APIs",
     "keywords": ["pdo_oci", "pdo", "oracle", "database"],
     "homepage": "https://pecl.php.net/package/PDO_OCI",
-    "license": "PHP",
+    "license": "PHP-3.01",
     "authors": [
         {
             "name": "Christopher Jones",
