@@ -27,7 +27,7 @@
 #include "php_pdo_oci_int.h"
 #include "Zend/zend_exceptions.h"
 
-static inline ub4 pdo_oci_sanitize_prefetch(long prefetch);
+static inline ub4 pdo_oci_sanitize_prefetch(zend_long prefetch);
 
 static void pdo_oci_fetch_error_func(pdo_dbh_t *dbh, pdo_stmt_t *stmt, zval *info) /* {{{ */
 {
@@ -879,13 +879,14 @@ const pdo_driver_t pdo_oci_driver = {
 	pdo_oci_handle_factory
 };
 
-static inline ub4 pdo_oci_sanitize_prefetch(long prefetch) /* {{{ */
+static inline ub4 pdo_oci_sanitize_prefetch(zend_long prefetch) /* {{{ */
 {
 	if (prefetch < 0) {
-		prefetch = 0;
-	} else if (prefetch > UB4MAXVAL / PDO_OCI_PREFETCH_ROWSIZE) {
-		prefetch = PDO_OCI_PREFETCH_DEFAULT;
+		return 0;
 	}
-	return ((ub4)prefetch);
+	if (prefetch > (zend_long)(UB4MAXVAL / PDO_OCI_PREFETCH_ROWSIZE)) {
+		return PDO_OCI_PREFETCH_DEFAULT;
+	}
+	return (ub4)prefetch;
 }
 /* }}} */
