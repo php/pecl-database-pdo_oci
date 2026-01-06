@@ -278,7 +278,7 @@ static sb4 oci_bind_output_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, d
 
 	zval_ptr_dtor(parameter);
 
-	Z_STR_P(parameter) = zend_string_alloc(param->max_value_len, 1);
+	ZVAL_NEW_STR(parameter, zend_string_alloc(param->max_value_len, false));
 	P->used_for_output = 1;
 
 	P->actual_len = (ub4) Z_STRLEN_P(parameter);
@@ -397,7 +397,8 @@ static int oci_stmt_param_hook(pdo_stmt_t *stmt, struct pdo_bound_param_data *pa
 						zval_ptr_dtor_str(parameter);
 						ZVAL_UNDEF(parameter);
 					} else if (Z_TYPE_P(parameter) == IS_STRING) {
-						Z_STR_P(parameter) = zend_string_init(Z_STRVAL_P(parameter), P->actual_len, 1);
+						ZVAL_STR(parameter, zend_string_truncate(Z_STR_P(parameter), P->actual_len, false));
+						Z_STRVAL_P(parameter)[Z_STRLEN_P(parameter)] = '\0';
 					}
 				} else if (PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_LOB && P->thing) {
 					php_stream *stm;
