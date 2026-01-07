@@ -84,4 +84,3 @@ else
 ?>
 --EXPECT--
 Success! All the temporary LOB in previously closed statements are properly cleaned.
-

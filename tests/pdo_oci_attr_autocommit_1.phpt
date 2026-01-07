@@ -61,7 +61,7 @@ echo "Done\n";
 ?>
 --CLEAN--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->exec("begin
              execute immediate 'drop table test_pdo_oci_attr_autocommit_1';
@@ -79,4 +79,3 @@ Insert data
 Second connection should be able to see committed data
 Data is: some data
 Done
-

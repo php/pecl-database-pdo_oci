@@ -55,4 +55,3 @@ ACTION RESET: string(15) "something else!"
 bool(true)
 ACTION NULLED: NULL
 Done
-

@@ -31,7 +31,7 @@ var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
 ?>
 --CLEAN--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->exec("begin
              execute immediate 'drop table test54379';
@@ -54,4 +54,3 @@ array(2) {
     string(60) "あいうえおかきくけこさしすせそたちつてと"
   }
 }
-

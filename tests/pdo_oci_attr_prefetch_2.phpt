@@ -47,4 +47,3 @@ X
 Test 2: Turn off prefetching
 X
 Done
-

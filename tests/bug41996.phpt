@@ -20,4 +20,3 @@ var_dump(strlen($row[0]) > 0);
 ?>
 --EXPECT--
 bool(true)
-

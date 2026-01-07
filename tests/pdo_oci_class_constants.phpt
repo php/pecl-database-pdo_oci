@@ -66,4 +66,3 @@ print "done!";
 ?>
 --EXPECT--
 done!
-
