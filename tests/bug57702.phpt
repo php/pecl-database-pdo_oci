@@ -148,7 +148,7 @@ print "done\n";
 ?>
 --CLEAN--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->exec("begin
              execute immediate 'drop table test57702';
@@ -184,8 +184,8 @@ string(11) "row 2 col 1"
 string(11) "row 2 col 2"
 
 Fifth Query
-string(11) "row 2 col 1"
-string(11) "row 2 col 2"
+string(11) "row 1 col 1"
+string(11) "row 1 col 2"
 string(11) "row 2 col 1"
 string(11) "row 2 col 2"
 
