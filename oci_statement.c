@@ -424,8 +424,7 @@ static int oci_stmt_param_hook(pdo_stmt_t *stmt, struct pdo_bound_param_data *pa
 						/* set up a NULL value */
 						if (Z_TYPE_P(parameter) == IS_STRING) {
 							/* OCI likes to stick non-terminated strings in things */
-							*Z_STRVAL_P(param
-								eter) = '\0';
+							*Z_STRVAL_P(parameter) = '\0';
 						}
 						zval_ptr_dtor_str(parameter);
 						ZVAL_UNDEF(parameter);
