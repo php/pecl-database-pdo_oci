@@ -35,7 +35,7 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
   <name>Christopher Jones</name>
   <user>sixd</user>
   <email>sixd@php.net</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
 
  <lead>
@@ -45,12 +45,12 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
   <active>yes</active>
  </lead>
 
- <date>2024-08-21</date>
+ <date>2026-01-07</date>
  <time>12:00:00</time>
 
   <version>
-   <release>1.1.0</release>
-   <api>1.1.0</api>
+   <release>1.2.0</release>
+   <api>1.2.0</api>
   </version>
   <stability>
    <release>stable</release>
@@ -58,9 +58,8 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
   </stability>
   <license uri="http://www.php.net/license">PHP</license>
   <notes>
-    This version is for PHP 8.3 and 8.4 only.
-
-    Requires Oracle Client libraries from 11.2 or later.
+    This version is for PHP 8.3 and newer versions.
+    Improved multiple binding and LOB handling, Added PIE migration support.
   </notes>
  <contents>
   <dir name="/">
@@ -90,4 +89,22 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
  <extsrcrelease>
   <configureoption default="autodetect" name="with-pdo-oci" prompt="Please provide the path to the ORACLE_HOME directory. Use &apos;instantclient,/path/to/instant/client/lib&apos; if you&apos;re compiling with Oracle Instant Client" />
  </extsrcrelease>
+ <changelog>
+  <release>
+   <version>
+    <release>1.1.0</release>
+    <api>1.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>
+       This version is for PHP 8.3 and 8.4 only.
+
+       Requires Oracle Client libraries from 11.2 or later.
+   </notes>
+  </release>
+ </changelog>
 </package>
