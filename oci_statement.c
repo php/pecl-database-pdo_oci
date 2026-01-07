@@ -225,23 +225,39 @@ static sb4 oci_bind_input_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, dv
 		*bufpp = 0;
 		*alenp = -1;
 	} else if (!P->thing) {
-		if(PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_BOOL) {
-			/* Handle boolean as "1"/ "0" */
-			if(zend_is_true(parameter)) {
-				zval_ptr_dtor(parameter);
-				ZVAL_CHAR(parameter, '1');
-			} else {
-				zval_ptr_dtor(parameter);
-				ZVAL_CHAR(parameter, '0');
-			}
-		} else {
-			/* regular string bind */
-			if (!try_convert_to_string(parameter)) {
-				return OCI_ERROR;
-			}
+		if (P->oci_type == SQLT_INT)
+		{
+			P->int_val = (sb4) zval_get_long(parameter);
+			*bufpp = &P->int_val;
+			*alenp = sizeof(sb4);
 		}
-		*bufpp = Z_STRVAL_P(parameter);
-		*alenp = (ub4) Z_STRLEN_P(parameter);
+		else
+		{
+			if (PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_BOOL)
+			{
+				/* Handle boolean as "1"/ "0" */
+				if (zend_is_true(parameter))
+				{
+					zval_ptr_dtor(parameter);
+					ZVAL_CHAR(parameter, '1');
+				}
+				else
+				{
+					zval_ptr_dtor(parameter);
+					ZVAL_CHAR(parameter, '0');
+				}
+			}
+			else
+			{
+				/* regular string bind */
+				if (!try_convert_to_string(parameter))
+				{
+					return OCI_ERROR;
+				}
+			}
+			*bufpp = Z_STRVAL_P(parameter);
+			*alenp = (ub4) Z_STRLEN_P(parameter);
+		}
 	}
 
 	*piecep = OCI_ONE_PIECE;
@@ -265,6 +281,17 @@ static sb4 oci_bind_output_cb(dvoid *ctx, OCIBind *bindp, ub4 iter, ub4 index, d
 	if (PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_LOB) {
 		P->actual_len = sizeof(OCILobLocator*);
 		*bufpp = P->thing;
+		*alenpp = &P->actual_len;
+		*piecep = OCI_ONE_PIECE;
+		*rcodepp = &P->retcode;
+		*indpp = &P->indicator;
+		return OCI_CONTINUE;
+	}
+
+	if (P->oci_type == SQLT_INT)
+	{
+		P->actual_len = sizeof(sb4);
+		*bufpp = &P->int_val;
 		*alenpp = &P->actual_len;
 		*piecep = OCI_ONE_PIECE;
 		*rcodepp = &P->retcode;
@@ -343,6 +370,11 @@ static int oci_stmt_param_hook(pdo_stmt_t *stmt, struct pdo_bound_param_data *pa
 						value_sz = (sb4) sizeof(OCILobLocator*);
 						break;
 
+					case PDO_PARAM_INT:
+						P->oci_type = SQLT_INT;
+						value_sz = (sb4) sizeof(sb4);
+						break;
+
 					case PDO_PARAM_STR:
 					default:
 						P->oci_type = SQLT_CHR;
@@ -392,11 +424,12 @@ static int oci_stmt_param_hook(pdo_stmt_t *stmt, struct pdo_bound_param_data *pa
 						/* set up a NULL value */
 						if (Z_TYPE_P(parameter) == IS_STRING) {
 							/* OCI likes to stick non-terminated strings in things */
-							*Z_STRVAL_P(parameter) = '\0';
+							*Z_STRVAL_P(param
+								eter) = '\0';
 						}
 						zval_ptr_dtor_str(parameter);
 						ZVAL_UNDEF(parameter);
-					} else if (Z_TYPE_P(parameter) == IS_STRING) {
+					}	else if (Z_TYPE_P(parameter) == IS_STRING) {
 						Z_STR_P(parameter) = zend_string_init(Z_STRVAL_P(parameter), P->actual_len, 1);
 					}
 				} else if (PDO_PARAM_TYPE(param->param_type) == PDO_PARAM_LOB && P->thing) {
