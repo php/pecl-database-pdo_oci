@@ -797,6 +797,19 @@ static int oci_stmt_get_col(pdo_stmt_t *stmt, int colno, zval *result, enum pdo_
 
 		if (C->dtype == SQLT_BLOB || C->dtype == SQLT_CLOB) {
 			if (C->data) {
+				OCILobLocator *new_lob;
+				boolean isTempLOB;
+				OCILobIsTemporary(S->H->env, S->err, (OCILobLocator*)C->data, &isTempLOB);
+				if (!isTempLOB &&
+						OCIDescriptorAlloc(S->H->env, (dvoid**)&new_lob, OCI_DTYPE_LOB, 0, NULL) == OCI_SUCCESS) {
+					if (OCILobLocatorAssign(S->H->svc, S->err, (OCILobLocator*)C->data, &new_lob) == OCI_SUCCESS) {
+						php_stream *stream = oci_create_lob_stream(stmt, new_lob);
+						OCILobOpen(S->H->svc, S->err, new_lob, OCI_LOB_READONLY);
+						php_stream_to_zval(stream, result);
+						return 1;
+					}
+					OCIDescriptorFree(new_lob, OCI_DTYPE_LOB);
+				}
 				php_stream *stream = oci_create_lob_stream(stmt, (OCILobLocator*)C->data);
 				OCILobOpen(S->H->svc, S->err, (OCILobLocator*)C->data, OCI_LOB_READONLY);
 				php_stream_to_zval(stream, result);
