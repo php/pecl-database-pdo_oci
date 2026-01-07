@@ -42,4 +42,3 @@ echo "Done\n";
 ATTR_CLIENT_VERSION: string(%d) "%d.%s"
 Version OK, so far as can be portably checked
 Done
-

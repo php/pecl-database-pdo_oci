@@ -40,4 +40,3 @@ Test 2
 ATTR_SERVER_INFO
 Found 'Oracle' at position 0 as expected
 Done
-

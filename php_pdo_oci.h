@@ -21,7 +21,7 @@ extern zend_module_entry pdo_oci_module_entry;
 #define phpext_pdo_oci_ptr &pdo_oci_module_entry
 
 #include "php_version.h"
-#define PHP_PDO_OCI_VERSION "1.1.0"
+#define PHP_PDO_OCI_VERSION "1.2.0"
 
 #ifdef ZTS
 #include "TSRM.h"
@@ -33,4 +33,4 @@ PHP_RINIT_FUNCTION(pdo_oci);
 PHP_RSHUTDOWN_FUNCTION(pdo_oci);
 PHP_MINFO_FUNCTION(pdo_oci);
 
-#endif	/* PHP_PDO_OCI_H */
+#endif /* PHP_PDO_OCI_H */

@@ -49,4 +49,3 @@ MODULE RESET: string(15) "something else!"
 bool(true)
 MODULE NULLED: NULL
 Done
-

@@ -15,7 +15,7 @@ if (version_compare($db->getAttribute(PDO::ATTR_SERVER_VERSION), 12) < 0) die('x
 
 echo "Preparations before the test\n";
 
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 try {
     $db = PDOTest::factory();
 
@@ -293,11 +293,11 @@ try {
         $e->getMessage(), $db->errorInfo(), implode(' ', $db->errorInfo()));
 }
 
-print "done!";
+print "done!\n";
 ?>
 --CLEAN--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->exec("begin
              execute immediate 'drop table test_pdo_oci_stmt_getcolumnmeta';
@@ -325,4 +325,3 @@ Test 2.5 testing lobs columns
 Test 2.6 testing function return
 Test 2.7 testing flags returned
 done!
-

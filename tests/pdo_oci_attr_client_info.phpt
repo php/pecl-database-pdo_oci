@@ -55,4 +55,3 @@ CLIENT_INFO RESET: string(15) "something else!"
 bool(true)
 CLIENT_INFO NULLED: NULL
 Done
-
