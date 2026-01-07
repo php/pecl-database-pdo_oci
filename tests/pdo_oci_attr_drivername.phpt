@@ -21,4 +21,3 @@ echo "Done\n";
 --EXPECT--
 string(3) "oci"
 Done
-

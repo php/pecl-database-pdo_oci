@@ -116,7 +116,7 @@ if ($string4 != $stream4 || $stream4 != stream_get_contents($row['DATA2'])) {
 ?>
 --CLEAN--
 <?php
-require(getenv('PDO_TEST_DIR').'/pdo_test.inc');
+require_once(getenv('PDO_TEST_DIR').'/pdo_test.inc');
 $db = PDOTest::test_factory(getenv('PDO_OCI_TEST_DIR').'/common.phpt');
 $db->exec("begin
              execute immediate 'drop table pdo_oci_bug60994';

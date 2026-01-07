@@ -121,4 +121,3 @@ array(3) {
   string(%d) "OCIStmtExecute: OCI_SUCCESS_WITH_INFO: ORA-24344: %s
  (%s:%d)"
 }
-

@@ -78,4 +78,3 @@ Test set PHP_INT_MAX: (Uses default)
 100
 X
 Done
-
