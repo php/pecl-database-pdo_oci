@@ -581,6 +581,11 @@ static int oci_stmt_describe(pdo_stmt_t *stmt, int colno) /* {{{ */
 			dyn = TRUE;
 			break;
 
+		case SQLT_BOL:
+			S->cols[colno].datalen = 1;
+			S->cols[colno].data = emalloc(S->cols[colno].datalen + 1);
+			break;
+
 		case SQLT_BIN:
 		default:
 			if (dtype == SQLT_DAT || dtype == SQLT_NUM || dtype == SQLT_RDD
@@ -795,6 +800,11 @@ static int oci_stmt_get_col(pdo_stmt_t *stmt, int colno, zval *result, enum pdo_
 	} else if (C->indicator == 0) {
 		/* it was stored perfectly */
 
+		if (C->dtype == SQLT_BOL) {
+			ZVAL_BOOL(result, strlen(C->data));
+			return 1;
+		}
+
 		if (C->dtype == SQLT_BLOB || C->dtype == SQLT_CLOB) {
 			if (C->data) {
 				php_stream *stream = oci_create_lob_stream(stmt, (OCILobLocator*)C->data);
@@ -970,6 +980,10 @@ static int oci_stmt_col_meta(pdo_stmt_t *stmt, zend_long colno, zval *return_val
 			add_assoc_string(return_value, "oci:decl_type", "BINARY_DOUBLE");
 			add_assoc_string(return_value, "native_type", "BINARY_DOUBLE");
 			break;
+		case SQLT_BOL:
+			add_assoc_string(return_value, "oci:decl_type", "BOOLEAN");
+			add_assoc_string(return_value, "native_type", "BOOLEAN");
+			break;
 		default:
 			add_assoc_long(return_value, "oci:decl_type", dtype);
 			add_assoc_string(return_value, "native_type", "UNKNOWN");
@@ -981,6 +995,9 @@ static int oci_stmt_col_meta(pdo_stmt_t *stmt, zend_long colno, zval *return_val
 	}
 
 	switch (dtype) {
+		case SQLT_BOL:
+			add_assoc_long(return_value, "pdo_type", PDO_PARAM_BOOL);
+			break;
 		case SQLT_BLOB:
 		case SQLT_CLOB:
 			add_assoc_long(return_value, "pdo_type", PDO_PARAM_LOB);
@@ -1002,6 +1019,9 @@ static int oci_stmt_col_meta(pdo_stmt_t *stmt, zend_long colno, zval *return_val
 
 	/* PDO type */
 	switch (dtype) {
+		case SQLT_BOL:
+			add_assoc_long(return_value, "pdo_type", PDO_PARAM_BOOL);
+			break;
 		case SQLT_BFILE:
 		case SQLT_BLOB:
 		case SQLT_CLOB:
