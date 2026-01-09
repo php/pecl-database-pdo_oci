@@ -11,6 +11,10 @@ Documentation is at https://www.php.net/pdo_oci
 Installation
 ------------
 
+**PECL**
+
+The PDO_OCI extension is available in the PECL repository [here](https://pecl.php.net/package/PDO_OCI).
+
 Use `pecl install pdo_oci` to install for PHP 8.3 and newer versions.
 
 For older PHP versions, use php_pdo_oci.dll from the Windows PHP release
@@ -24,6 +28,15 @@ make install
 
 To complete installation, add "extension=pdo_oci.so" or
 "extension=php_pdo_oci.dll" (Windows) to your php.ini file.
+
+**PIE**
+
+The PHP OCI8 extension is also available in the PIE Packagist repository [here](https://packagist.org/packages/pecl/pdo_oci).
+
+To install from PIE, use the [pie](https://github.com/php/pie/releases) utility and run:
+```
+pie install pecl/pdo_oci
+```
 
 Tests
 -----
