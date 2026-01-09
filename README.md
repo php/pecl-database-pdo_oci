@@ -21,7 +21,7 @@ For older PHP versions, use php_pdo_oci.dll from the Windows PHP release
 bundle, or build from the PHP source code by running:
 ```
 phpize
-./configure --with-pdo_oci=shared,instantclient,/path/to/instant/client/sdk/lib
+./configure --with-pdo_oci=shared,instantclient,/path/to/instant/client/sdk
 make install
 
 ```
