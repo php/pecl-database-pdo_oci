@@ -73,7 +73,49 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
    <file name="php_pdo_oci.h" role="src" />
    <file name="php_pdo_oci_int.h" role="src" />
    <file name="README.md" role="doc" />
-  </dir>
+    <dir name="tests">
+     <file name="bug33707.phpt" role="test" />
+     <file name="bug41996.phpt" role="test" />
+     <file name="bug44301.phpt" role="test" />
+     <file name="bug46274_2.phpt" role="test" />
+     <file name="bug46274.phpt" role="test" />
+     <file name="bug54379.phpt" role="test" />
+     <file name="bug57702.phpt" role="test" />
+     <file name="bug60994.phpt" role="test" />
+     <file name="checkliveness.phpt" role="test" />
+     <file name="common.phpt" role="test" />
+     <file name="oci_success_with_info.phpt" role="test" />
+     <file name="pdo_oci_attr_action.phpt" role="test" />
+     <file name="pdo_oci_attr_autocommit_1.phpt" role="test" />
+     <file name="pdo_oci_attr_autocommit_2.phpt" role="test" />
+     <file name="pdo_oci_attr_autocommit_3.phpt" role="test" />
+     <file name="pdo_oci_attr_call_timeout.phpt" role="test" />
+     <file name="pdo_oci_attr_case.phpt" role="test" />
+     <file name="pdo_oci_attr_client_identifier.phpt" role="test" />
+     <file name="pdo_oci_attr_client_info.phpt" role="test" />
+     <file name="pdo_oci_attr_client.phpt" role="test" />
+     <file name="pdo_oci_attr_drivername.phpt" role="test" />
+     <file name="pdo_oci_attr_module.phpt" role="test" />
+     <file name="pdo_oci_attr_nulls_1.phpt" role="test" />
+     <file name="pdo_oci_attr_prefetch_1.phpt" role="test" />
+     <file name="pdo_oci_attr_prefetch_2.phpt" role="test" />
+     <file name="pdo_oci_attr_server.phpt" role="test" />
+     <file name="pdo_oci_bind_bool.phpt" role="test" />
+     <file name="pdo_oci_bind_input_output.phpt" role="test" />
+     <file name="pdo_oci_class_constants.phpt" role="test" />
+     <file name="pdo_oci_debugdumpparams.phpt" role="test" />
+     <file name="pdo_oci_fread_1.phpt" role="test" />
+     <file name="pdo_oci_phpinfo.phpt" role="test" />
+     <file name="pdo_oci_quote1.phpt" role="test" />
+     <file name="pdo_oci_stmt_getcolumnmeta.phpt" role="test" />
+     <file name="pdo_oci_stream_1.phpt" role="test" />
+     <file name="pdo_oci_stream_2.phpt" role="test" />
+     <file name="pdo_oci_templob_1.phpt" role="test" />
+     <file name="pecl_bug_6364.phpt" role="test" />
+     <file name="pecl_bug_11345.phpt" role="test" />
+     <file name="README.md" role="doc" />
+    </dir> <!-- //tests -->
+  </dir> <!-- / -->
  </contents>
  <dependencies>
   <required>
