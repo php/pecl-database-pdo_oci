@@ -84,6 +84,8 @@ typedef struct {
 
 	dvoid		*thing;	/* for LOBS, REFCURSORS etc. */
 
+	sb4			int_val;
+
 	unsigned used_for_output;
 } pdo_oci_bound_param;
 
