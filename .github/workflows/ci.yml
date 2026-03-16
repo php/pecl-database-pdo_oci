@@ -12,10 +12,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [8.3, 8.4, 8.5, 8.6]
-        oracle: [11, 18, 21, 23]
+        version: [8.3, 8.4, 8.5, master]
+        oracle: [18, 21, 23]
         include:
-          - oracle: 11
+          # Test Oracle 11 with PHP 8.3 only
+          # https://github.com/php/php-src/pull/18734
+          # https://github.com/php/pecl-database-pdo_oci/pull/16#discussion_r2119810891
+          - version: 8.3
+            oracle: 11
             image: wnameless/oracle-xe-11g-r2
             port: 1511
             options: --name=oci
@@ -31,24 +35,6 @@ jobs:
             image: gvenzl/oracle-free:23-slim
             port: 1523
             options: --health-cmd healthcheck.sh --health-interval 10s --health-timeout 5s --health-retries 10
-          - version: 8.3
-            branch : PHP-8.3
-          - version: 8.4
-            branch : PHP-8.4
-          - version: 8.5
-            branch : PHP-8.5
-          - version: 8.6
-            branch : master
-        exclude:
-          # Test with Oracle 11 with PHP 8.3 only
-          # https://github.com/php/php-src/pull/18734
-          # https://github.com/php/pecl-database-pdo_oci/pull/16#discussion_r2119810891
-          - version: 8.4
-            oracle: 11
-          - version: 8.5
-            oracle: 11
-          - version: 8.6
-            oracle: 11
     
     services:
       oracle:
@@ -80,7 +66,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: php/php-src
-          ref: ${{ matrix.branch }}
+          ref: ${{ matrix.version == 'master' && 'master' || format('PHP-{0}', matrix.version) }}
           path: php-src
       - name: Setup PHP
         id: setup-php
@@ -93,8 +79,9 @@ jobs:
           ./configure --with-php-config=$(command -v php-config) --with-pdo-oci=instantclient,/opt/oracle/instantclient
           make -j$(nproc)
           sudo make install
-          echo 'extension=pdo_oci.so' | sudo tee /etc/php/${{ matrix.version }}/mods-available/pdo_oci.ini
-          sudo phpenmod -v ${{ matrix.version }} pdo_oci
+          version=$(php-config --version | cut -d. -f1,2)
+          echo 'extension=pdo_oci.so' | sudo tee "/etc/php/$version/mods-available/pdo_oci.ini"
+          sudo phpenmod -v "$version" pdo_oci
           php --ri pdo_oci
       - name: Remove unsupported php-src tests
         run: |
