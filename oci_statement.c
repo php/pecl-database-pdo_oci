@@ -520,7 +520,9 @@ static sb4 oci_define_callback(dvoid *octxp, OCIDefine *define, ub4 iter, dvoid 
 			*alenpp = &col->datalen;
 			*indpp = (dvoid *)&col->indicator;
 			break;
-		EMPTY_SWITCH_DEFAULT_CASE();
+		default:
+			ZEND_UNREACHABLE();
+			break;
 	}
 
 	return OCI_CONTINUE;
