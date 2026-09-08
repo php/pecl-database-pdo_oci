@@ -43,7 +43,7 @@ zend_module_entry pdo_oci_module_entry = {
 	NULL,
 	PHP_MINIT(pdo_oci),
 	PHP_MSHUTDOWN(pdo_oci),
-	PHP_RINIT(pdo_oci),
+	NULL,
 	NULL,
 	PHP_MINFO(pdo_oci),
 	PHP_PDO_OCI_VERSION,
@@ -101,7 +101,7 @@ PHP_MINIT_FUNCTION(pdo_oci)
 		return FAILURE;
 	}
 
-	// Defer OCI init to PHP_RINIT_FUNCTION because with php-fpm,
+	// Defer OCI init to pdo_oci_init_env() because with php-fpm,
 	// NLS_LANG is not yet available here.
 
 #ifdef ZTS
@@ -112,8 +112,13 @@ PHP_MINIT_FUNCTION(pdo_oci)
 }
 /* }}} */
 
-/* {{{ PHP_RINIT_FUNCTION */
-PHP_RINIT_FUNCTION(pdo_oci)
+/* {{{ pdo_oci_init_env
+ * Create the true global OCI environment on first use.
+ * Called from pdo_oci_handle_factory() rather than from MINIT (NLS_LANG is not
+ * yet available there under php-fpm) or from RINIT (initializing the Oracle
+ * client library has process-wide side effects, so a process that never opens
+ * an Oracle connection must not pay for it). */
+void pdo_oci_init_env(void)
 {
 	if (!pdo_oci_Env) {
 #ifdef ZTS
@@ -126,8 +131,6 @@ PHP_RINIT_FUNCTION(pdo_oci)
 		tsrm_mutex_unlock(pdo_oci_env_mutex);
 #endif
 	}
-
-	return SUCCESS;
 }
 /* }}} */
 

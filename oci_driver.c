@@ -741,6 +741,9 @@ static int pdo_oci_handle_factory(pdo_dbh_t *dbh, zval *driver_options) /* {{{ *
 
 	H->prefetch = PDO_OCI_PREFETCH_DEFAULT;
 
+	/* create the true global environment on first use */
+	pdo_oci_init_env();
+
 	/* allocate an environment */
 #ifdef HAVE_OCIENVNLSCREATE
 	if (vars[0].optval) {
