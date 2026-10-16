@@ -172,6 +172,8 @@ static int oci_stmt_execute(pdo_stmt_t *stmt) /* {{{ */
 		STMT_CALL_MSG(OCIAttrGet, "ATTR_PARAM_COUNT",
 				(S->stmt, OCI_HTYPE_STMT, &colcount, 0, OCI_ATTR_PARAM_COUNT, S->err));
 
+		/* drop PDO's column descriptions so it re-describes them into the new S->cols */
+		php_pdo_stmt_set_column_count(stmt, 0);
 		stmt->column_count = (int)colcount;
 
 		if (S->cols) {
