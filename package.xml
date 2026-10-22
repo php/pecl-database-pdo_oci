@@ -105,6 +105,7 @@ Oracle&apos;s standard cross-version connectivity applies.  For example, PHP PDO
      <file name="pdo_oci_class_constants.phpt" role="test" />
      <file name="pdo_oci_debugdumpparams.phpt" role="test" />
      <file name="pdo_oci_fread_1.phpt" role="test" />
+     <file name="pdo_oci_last_insert_id.phpt" role="test" />
      <file name="pdo_oci_phpinfo.phpt" role="test" />
      <file name="pdo_oci_quote1.phpt" role="test" />
      <file name="pdo_oci_stmt_getcolumnmeta.phpt" role="test" />
