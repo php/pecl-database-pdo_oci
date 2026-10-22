@@ -350,6 +350,49 @@ static zend_long oci_handle_doer(pdo_dbh_t *dbh, const zend_string *sql) /* {{{ 
 }
 /* }}} */
 
+static zend_string *oci_handle_last_id(pdo_dbh_t *dbh, const zend_string *name) /* {{{ */
+{
+	pdo_oci_db_handle *H = (pdo_oci_db_handle *)dbh->driver_data;
+	/* the name of the sequence can't be bound in SELECT, DBMS_ASSERT rejects anything else than a name */
+	static const char sql[] = "BEGIN EXECUTE IMMEDIATE 'SELECT ' || DBMS_ASSERT.QUALIFIED_SQL_NAME(:name) || '.CURRVAL FROM DUAL' INTO :id; END;";
+	OCIStmt *stmt;
+	OCIBind *bind_name = NULL, *bind_id = NULL;
+	char id[64]; /* NUMBER has at most 40 digits */
+	sb2 id_ind = -1;
+	zend_string *ret = NULL;
+
+	if (!name) {
+		/* Oracle has no last ID of the session, only CURRVAL of a sequence */
+		oci_init_error("lastInsertId() needs the name of a sequence"); /* clears the previous error */
+		strcpy(dbh->error_code, "IM001");
+		return NULL;
+	}
+
+	OCIHandleAlloc(H->env, (dvoid*)&stmt, OCI_HTYPE_STMT, 0, NULL);
+
+	H->last_err = OCIStmtPrepare(stmt, H->err, (text*)sql, (ub4) (sizeof(sql) - 1), OCI_NTV_SYNTAX, OCI_DEFAULT);
+	if (!H->last_err) {
+		H->last_err = OCIBindByName(stmt, &bind_name, H->err, (text*)":name", -1, (dvoid*)ZSTR_VAL(name), (sb4) ZSTR_LEN(name), SQLT_CHR, NULL, NULL, NULL, 0, NULL, OCI_DEFAULT);
+	}
+	if (!H->last_err) {
+		H->last_err = OCIBindByName(stmt, &bind_id, H->err, (text*)":id", -1, (dvoid*)id, (sb4) sizeof(id), SQLT_STR, &id_ind, NULL, NULL, 0, NULL, OCI_DEFAULT);
+	}
+	if (!H->last_err) {
+		H->last_err = OCIStmtExecute(H->svc, stmt, H->err, 1, 0, NULL, NULL, OCI_DEFAULT); /* never commits */
+	}
+
+	if (H->last_err && H->last_err != OCI_SUCCESS_WITH_INFO) {
+		H->last_err = oci_drv_error("lastInsertId");
+	} else if (id_ind == 0) {
+		ret = zend_string_init(id, strlen(id), 0);
+	}
+
+	OCIHandleFree(stmt, OCI_HTYPE_STMT);
+
+	return ret;
+}
+/* }}} */
+
 static zend_string* oci_handle_quoter(pdo_dbh_t *dbh, const zend_string *unquoted, enum pdo_param_type paramtype ) /* {{{ */
 {
 	int qcount = 0;
@@ -708,7 +751,7 @@ static const struct pdo_dbh_methods oci_methods = {
 	oci_handle_commit,
 	oci_handle_rollback,
 	oci_handle_set_attribute,
-	NULL, /* last_id not supported */
+	oci_handle_last_id,
 	pdo_oci_fetch_error_func,
 	oci_handle_get_attribute,
 	pdo_oci_check_liveness,	/* check_liveness */
