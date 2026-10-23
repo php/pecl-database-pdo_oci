@@ -29,6 +29,27 @@ $stmt->execute();
 echo "after re-execute: ";
 var_dump($stmt->fetchAll(PDO::FETCH_NUM));
 
+$dbh->setAttribute(PDO::ATTR_PREFETCH, 0);
+foreach (['forward' => PDO::CURSOR_FWDONLY, 'scrollable' => PDO::CURSOR_SCROLL] as $name => $cursor) {
+    echo "$name cursor:\n";
+    $stmt = $dbh->prepare('SELECT :value FROM dual CONNECT BY LEVEL <= 2', [PDO::ATTR_CURSOR => $cursor]);
+    var_dump($stmt->closeCursor());
+    $value = 'first';
+    $stmt->bindParam(':value', $value);
+    $stmt->execute();
+    echo $stmt->fetchColumn(), "\n";
+
+    $value = 'second';
+    $stmt->execute();
+    echo $stmt->fetchColumn(), "\n";
+    var_dump($stmt->closeCursor());
+    var_dump($stmt->closeCursor());
+
+    $value = 'third';
+    $stmt->execute();
+    echo implode(', ', $stmt->fetchAll(PDO::FETCH_COLUMN)), "\n";
+}
+
 ?>
 --EXPECT--
 first: array(1) {
@@ -58,3 +79,17 @@ after re-execute: array(1) {
     string(1) "B"
   }
 }
+forward cursor:
+bool(true)
+first
+second
+bool(true)
+bool(true)
+third, third
+scrollable cursor:
+bool(true)
+first
+second
+bool(true)
+bool(true)
+third, third
