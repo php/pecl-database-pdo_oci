@@ -172,6 +172,8 @@ static int oci_stmt_execute(pdo_stmt_t *stmt) /* {{{ */
 		STMT_CALL_MSG(OCIAttrGet, "ATTR_PARAM_COUNT",
 				(S->stmt, OCI_HTYPE_STMT, &colcount, 0, OCI_ATTR_PARAM_COUNT, S->err));
 
+		/* drop PDO's column descriptions so it re-describes them into the new S->cols */
+		php_pdo_stmt_set_column_count(stmt, 0);
 		stmt->column_count = (int)colcount;
 
 		if (S->cols) {
@@ -1018,6 +1020,17 @@ static int oci_stmt_col_meta(pdo_stmt_t *stmt, zend_long colno, zval *return_val
 	return SUCCESS;
 } /* }}} */
 
+static int oci_stmt_cursor_closer(pdo_stmt_t *stmt)
+{
+	pdo_oci_stmt *S = (pdo_oci_stmt*)stmt->driver_data;
+
+	if (S && S->stmt && S->stmt_type == OCI_STMT_SELECT) {
+		OCIStmtFetch(S->stmt, S->err, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
+	}
+
+	return 1;
+}
+
 const struct pdo_stmt_methods oci_stmt_methods = {
 	oci_stmt_dtor,
 	oci_stmt_execute,
@@ -1029,5 +1042,5 @@ const struct pdo_stmt_methods oci_stmt_methods = {
 	NULL, /* get_attr */
 	oci_stmt_col_meta,
 	NULL,
-	NULL
+	oci_stmt_cursor_closer
 };
