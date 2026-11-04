@@ -29,8 +29,6 @@ extern zend_module_entry pdo_oci_module_entry;
 
 PHP_MINIT_FUNCTION(pdo_oci);
 PHP_MSHUTDOWN_FUNCTION(pdo_oci);
-PHP_RINIT_FUNCTION(pdo_oci);
-PHP_RSHUTDOWN_FUNCTION(pdo_oci);
 PHP_MINFO_FUNCTION(pdo_oci);
 
 #endif /* PHP_PDO_OCI_H */
