@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [8.3, 8.4, 8.5, master]
+        version: [8.3, 8.4, 8.5, 8.6, master]
         oracle: [18, 21, 23]
         include:
           # Test Oracle 11 with PHP 8.3 only
@@ -108,7 +108,7 @@ jobs:
         id: extension-matrix
         uses: php/php-windows-builder/extension-matrix@v1
         with:
-          php-version-list: '8.3, 8.4, 8.5'
+          php-version-list: '8.3, 8.4, 8.5, 8.6'
 
   windows:
     needs: windows-matrix
