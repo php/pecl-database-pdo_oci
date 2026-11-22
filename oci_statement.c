@@ -61,24 +61,27 @@ static php_stream *oci_create_lob_stream(pdo_stmt_t *stmt, OCILobLocator *lob);
 static int oci_stmt_dtor(pdo_stmt_t *stmt) /* {{{ */
 {
 	pdo_oci_stmt *S = (pdo_oci_stmt*)stmt->driver_data;
+	pdo_oci_db_handle *H = S->H;
 	HashTable *BC = stmt->bound_columns;
 	HashTable *BP = stmt->bound_params;
 
 	int i;
 
-	if (S->stmt) {
+	/* Releasing a private environment also frees its child handles. */
+	if (H->env && S->stmt) {
 		/* cancel server side resources for the statement if we didn't
 		 * fetch it all */
-		OCIStmtFetch(S->stmt, S->err, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
+		if (H->svc) {
+			OCIStmtFetch(S->stmt, S->err, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
+		}
 
-		/* free the handle */
 		OCIHandleFree(S->stmt, OCI_HTYPE_STMT);
-		S->stmt = NULL;
 	}
-	if (S->err) {
+	S->stmt = NULL;
+	if (H->env && S->err) {
 		OCIHandleFree(S->err, OCI_HTYPE_ERROR);
-		S->err = NULL;
 	}
+	S->err = NULL;
 
 	/* need to ensure these go away now */
 	if (BC) {
@@ -94,17 +97,9 @@ static int oci_stmt_dtor(pdo_stmt_t *stmt) /* {{{ */
 	}
 
 	if (S->einfo.errmsg) {
-		pefree(S->einfo.errmsg, stmt->dbh->is_persistent);
+		pefree(S->einfo.errmsg, H->is_persistent);
 		S->einfo.errmsg = NULL;
 	}
-
-#if PHP_API_VERSION < 20240925
-	bool server_obj_usable = !Z_ISUNDEF(stmt->database_object_handle)
-		&& IS_OBJ_VALID(EG(objects_store).object_buckets[Z_OBJ_HANDLE(stmt->database_object_handle)])
-		&& !(OBJ_FLAGS(Z_OBJ(stmt->database_object_handle)) & IS_OBJ_FREE_CALLED);
-#else
-	bool server_obj_usable = php_pdo_stmt_valid_db_obj_handle(stmt);
-#endif
 
 	if (S->cols) {
 		for (i = 0; i < stmt->column_count; i++) {
@@ -112,11 +107,13 @@ static int oci_stmt_dtor(pdo_stmt_t *stmt) /* {{{ */
 				switch (S->cols[i].dtype) {
 					case SQLT_BLOB:
 					case SQLT_CLOB:
-						if (server_obj_usable) {
-							OCI_TEMPLOB_CLOSE(S->H->env, S->H->svc, S->H->err,
+						if (H->svc) {
+							OCI_TEMPLOB_CLOSE(H->env, H->svc, H->err,
 								(OCILobLocator *) S->cols[i].data);
 						}
-						OCIDescriptorFree(S->cols[i].data, OCI_DTYPE_LOB);
+						if (H->env) {
+							OCIDescriptorFree(S->cols[i].data, OCI_DTYPE_LOB);
+						}
 						break;
 					default:
 						efree(S->cols[i].data);
@@ -125,6 +122,9 @@ static int oci_stmt_dtor(pdo_stmt_t *stmt) /* {{{ */
 		}
 		efree(S->cols);
 		S->cols = NULL;
+	}
+	if (--H->refcount == 0) {
+		pefree(H, H->is_persistent);
 	}
 	efree(S);
 
@@ -319,8 +319,10 @@ static int oci_stmt_param_hook(pdo_stmt_t *stmt, struct pdo_bound_param_data *pa
 
 			case PDO_PARAM_EVT_FREE:
 				P = param->driver_data;
-				if (P && P->thing) {
-					OCI_TEMPLOB_CLOSE(S->H->env, S->H->svc, S->H->err, P->thing);
+				if (P && S->H->env && P->thing) {
+					if (S->H->svc) {
+						OCI_TEMPLOB_CLOSE(S->H->env, S->H->svc, S->H->err, P->thing);
+					}
 					OCIDescriptorFree(P->thing, OCI_DTYPE_LOB);
 					P->thing = NULL;
 					efree(P);
