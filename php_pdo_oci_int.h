@@ -42,9 +42,11 @@ typedef struct {
 	ub2			charset;
 	sword		last_err;
 	sb4			max_char_width;
+	uint32_t	refcount; /* one reference for the connection and one per prepared statement */
 
 	unsigned	attached:1;
-	unsigned	_reserved:31;
+	unsigned	is_persistent:1;
+	unsigned	_reserved:30;
 
 	pdo_oci_error_info einfo;
 } pdo_oci_db_handle;

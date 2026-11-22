@@ -230,7 +230,11 @@ static void oci_handle_closer(pdo_dbh_t *dbh) /* {{{ */
 		H->einfo.errmsg = NULL;
 	}
 
-	pefree(H, dbh->is_persistent);
+	/* Statements may still need the connection's cleanup state during GC. */
+	dbh->driver_data = NULL;
+	if (--H->refcount == 0) {
+		pefree(H, dbh->is_persistent);
+	}
 }
 /* }}} */
 
@@ -291,6 +295,7 @@ static bool oci_handle_preparer(pdo_dbh_t *dbh, zend_string *sql, pdo_stmt_t *st
 								 OCI_ATTR_PREFETCH_MEMORY, H->err);
 	}
 
+	H->refcount++;
 	stmt->driver_data = S;
 	stmt->methods = &oci_stmt_methods;
 	if (nsql) {
@@ -732,6 +737,8 @@ static int pdo_oci_handle_factory(pdo_dbh_t *dbh, zval *driver_options) /* {{{ *
 	php_pdo_parse_data_source(dbh->data_source, dbh->data_source_len, vars, 4);
 
 	H = pecalloc(1, sizeof(*H), dbh->is_persistent);
+	H->refcount = 1;
+	H->is_persistent = dbh->is_persistent;
 	dbh->driver_data = H;
 
 	dbh->skip_param_evt =
